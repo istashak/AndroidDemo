@@ -120,7 +120,7 @@ fun PersonItem(person: Person, navController: NavController, onClick: () -> Unit
         Column(modifier = Modifier.weight(1f)
         ) {
             Text(text = "$firstName $lastName")
-            Text(text = "$gender, Age: $age")
+            Text(text = "$age $gender")
         }
     }
 }
