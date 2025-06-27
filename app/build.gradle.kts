@@ -1,3 +1,7 @@
+val Any.preferences: kotlin.Any
+
+val org.gradle.accessors.dm.LibrariesForLibs.AndroidxLibraryAccessors.datastore: kotlin.Any
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -55,6 +59,8 @@ dependencies {
     implementation(libs.logging.interceptor)
     // Coil AsyncImage
     implementation(libs.coil.compose)
+
+    implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

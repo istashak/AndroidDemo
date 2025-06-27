@@ -1,6 +1,6 @@
 package com.voloaccendo.androiddemo.data.repository
 
-import com.voloaccendo.androiddemo.data.model.Person
+import com.voloaccendo.androiddemo.data.models.Person
 import com.voloaccendo.androiddemo.data.network.PeopleApiService
 
 class PeopleRepository(private val peopleApiServce: PeopleApiService) : IPeopleRepository {

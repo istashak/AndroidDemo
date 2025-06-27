@@ -29,10 +29,9 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
-import com.voloaccendo.androiddemo.data.model.Person
+import com.voloaccendo.androiddemo.data.models.Person
 import com.voloaccendo.androiddemo.ui.viewmodel.PeopleViewModel
 import org.koin.androidx.compose.koinViewModel
 

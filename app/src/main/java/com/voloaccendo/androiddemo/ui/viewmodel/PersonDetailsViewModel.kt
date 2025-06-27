@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.voloaccendo.androiddemo.data.model.Person
+import com.voloaccendo.androiddemo.data.models.Person
 import com.voloaccendo.androiddemo.data.repository.IPeopleRepository
 import kotlinx.coroutines.launch
 

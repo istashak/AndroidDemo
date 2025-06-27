@@ -2,7 +2,7 @@ package com.voloaccendo.androiddemo.ui.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.voloaccendo.androiddemo.data.model.Person
+import com.voloaccendo.androiddemo.data.models.Person
 import com.voloaccendo.androiddemo.data.repository.IPeopleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

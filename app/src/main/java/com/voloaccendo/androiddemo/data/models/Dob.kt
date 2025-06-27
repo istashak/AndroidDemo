@@ -1,4 +1,4 @@
-package com.voloaccendo.androiddemo.data.model
+package com.voloaccendo.androiddemo.data.models
 
 data class Dob(
     val date: String,
