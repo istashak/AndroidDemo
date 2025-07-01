@@ -18,6 +18,7 @@ class MainApplication : Application() {
         startKoin {
             androidLogger(Level.DEBUG)
             androidContext(this@MainApplication)
+
             // The order here generally does not matter for Koin's dependency resolution,
             // as Koin builds a graph of all definitions and resolves them lazily.
             // However, a logical order (e.g., from core/network to UI/viewModels) can improve readability.

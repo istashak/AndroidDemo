@@ -11,13 +11,12 @@ import com.voloaccendo.androiddemo.data.models.ThemeLighting
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
-
-val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = DataStoreSettingsRepository.SETTINGS_DATA_STORE)
-
-class DataStoreSettingsRepository(private val context: Context): ISettingsRepository {
+class DataStoreSettingsRepository(
+    private val dataStore: DataStore<Preferences> // Inject DataStore directly
+) : ISettingsRepository {
     private val themeLightingKey = stringPreferencesKey(THEME_LIGHTING_PREF)
 
-    override val settings: Flow<Settings> = context.dataStore.data
+    override val settings: Flow<Settings> = dataStore.data // Use the injected dataStore
         .map { preferences ->
             val themeName = preferences[themeLightingKey] ?: ThemeLighting.SYSTEM.name
             Settings(ThemeLighting.valueOf(value = themeName))
@@ -27,14 +26,14 @@ class DataStoreSettingsRepository(private val context: Context): ISettingsReposi
         setThemeLightingSettings(settings.themeLighting)
     }
 
-    override val themeLightingSettings = context.dataStore.data
+    override val themeLightingSettings = dataStore.data // Use the injected dataStore
         .map { preferences ->
             val themeName = preferences[themeLightingKey] ?: ThemeLighting.SYSTEM.name
             ThemeLighting.valueOf(value = themeName)
         }
 
     override suspend fun setThemeLightingSettings(themeLighting: ThemeLighting) {
-        context.dataStore.edit { preferences ->
+        dataStore.edit { preferences -> // Use the injected dataStore
             preferences[themeLightingKey] = themeLighting.name
         }
     }

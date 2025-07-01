@@ -69,6 +69,11 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.androidx.material3.window.size.class1.android)
     testImplementation(libs.junit)
+    // kotlinx-coroutines-test for runTest
+    testImplementation(libs.kotlinx.coroutines.test)
+    // Mockito
+    testImplementation(libs.mockito.core)
+    testImplementation(libs.mockito.kotlin)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
