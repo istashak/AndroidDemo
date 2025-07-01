@@ -1,6 +1,5 @@
-package com.voloaccendo.androiddemo.ui.view
+package com.voloaccendo.androiddemo.ui.view.screens
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -12,8 +11,12 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -25,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,6 +38,8 @@ import coil.request.ImageRequest
 import com.voloaccendo.androiddemo.data.models.Person
 import com.voloaccendo.androiddemo.ui.viewmodel.PeopleViewModel
 import org.koin.androidx.compose.koinViewModel
+import com.voloaccendo.androiddemo.R
+import com.voloaccendo.androiddemo.ui.theme.LocalDimensions
 
 @ExperimentalMaterial3Api
 @Composable
@@ -41,8 +47,18 @@ fun PeopleListScreen(navController: NavController) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("People List") },
-                modifier = Modifier.background(MaterialTheme.colorScheme.primary)
+                title = { Text(text = stringResource(id = R.string.people))},
+                actions = {
+                    IconButton(onClick = {
+                        navController.navigate("settings")
+                    }) {
+                        Icon(
+                            imageVector = Icons.Filled.Settings,
+                            contentDescription = "Settings Icon Button",
+                            tint = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                }
             )
         },
         modifier = Modifier.fillMaxSize()
@@ -53,6 +69,8 @@ fun PeopleListScreen(navController: NavController) {
 
 @Composable
 fun PeopleList(modifier: Modifier = Modifier, navController: NavController) {
+    val dimensions = LocalDimensions.current
+
     val peopleViewModel : PeopleViewModel = koinViewModel()
     // Collect the StateFlows from the ViewModel
     // collectAsStateWithLifecycle is lifecycle-aware and recommended
@@ -60,7 +78,7 @@ fun PeopleList(modifier: Modifier = Modifier, navController: NavController) {
     val isLoading by peopleViewModel.isLoading.collectAsStateWithLifecycle()
     val errorMessage by peopleViewModel.errorMessage.collectAsStateWithLifecycle()
 
-    Box(modifier = modifier.padding(horizontal = 16.dp).fillMaxSize()) {
+    Box(modifier = modifier.padding(horizontal = dimensions.screenPadding).fillMaxSize()) {
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
         } else if (errorMessage != null) {
