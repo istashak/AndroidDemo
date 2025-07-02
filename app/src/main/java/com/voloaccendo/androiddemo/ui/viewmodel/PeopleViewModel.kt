@@ -7,6 +7,7 @@ import com.voloaccendo.androiddemo.data.repository.people.IPeopleRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 data class PeopleUiState(
@@ -20,44 +21,60 @@ data class PeopleUiState(
 
 class PeopleViewModel(private val peopleRepository: IPeopleRepository) : ViewModel(){
 
-    // Backing property for the StateFlow (Mutable)
-    private val _peopleList = MutableStateFlow<List<Person>>(emptyList())
-    // Publicly exposed StateFlow (Immutable)
-    val peopleList: StateFlow<List<Person>> = _peopleList.asStateFlow()
-
-    // Optional: Add a StateFlow for loading state
-    private val _isLoading = MutableStateFlow<Boolean>(false)
-    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
-
-    // Optional: Add a StateFlow for error messages
-    private val _errorMessage = MutableStateFlow<String?>(null)
-    val errorMessage: StateFlow<String?> = _errorMessage.asStateFlow()
+    private val _uiState = MutableStateFlow(PeopleUiState())
+    val uiState: StateFlow<PeopleUiState> = _uiState.asStateFlow()
 
     init {
         // You might want to fetch people immediately when the ViewModel is created
-        fetchFirstPeoplePage() // This will be called when the ViewModel is created.
+        loadFirstPeoplePage() // This will be called when the ViewModel is created.
     }
 
-    fun fetchFirstPeoplePage()
+    fun loadFirstPeoplePage()
     {
+        if (_uiState.value.isLoading) return // Prevent multiple initial loads
+
         viewModelScope.launch {
-            _isLoading.value = true // Set loading state to true
-            _errorMessage.value = null // Clear previous error messages
-            try
-            {
-                // Assuming peopleRepository.getPeople(count, page) is a suspend function
-                // that returns a List<Person>
-                val people = peopleRepository.getPeople(count = PAGE_SIZE, page = 1)
-                _peopleList.value += people
-            } catch (e: Exception)
-            {
-                // Handle error, e.g., post a message to the UI
-                _errorMessage.value = "Failed to fetch people: ${e.message}"
-                // Optionally, you could set an empty list or keep the old data
-                // _peopleList.value = emptyList()
-            } finally
-            {
-                _isLoading.value = false // Set loading state to false
+            _uiState.update { it.copy(isLoading = true, currentPage = 1, people = emptyList(), canLoadMore = true) }
+            try {
+                // Replace with your actual repository call
+                val newPeople = peopleRepository.getPeople(page = 1, count = PAGE_SIZE)
+                _uiState.update {
+                    it.copy(
+                        isLoading = false,
+                        people = newPeople,
+                        currentPage = 1,
+                        canLoadMore = newPeople.size == PAGE_SIZE // Assume more if full page loaded
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(isLoading = false, errorMessage = e.message) }
+            }
+        }
+    }
+
+    fun loadMorePeople() {
+        val currentState = _uiState.value
+        // Prevent multiple loads if already loading, or if no more items, or initial load in progress
+        if (currentState.isLoadingMore || !currentState.canLoadMore || currentState.isLoading) return
+
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoadingMore = true) }
+            try {
+                val nextPage = currentState.currentPage + 1
+                // Replace with your actual repository call
+                val additionalPeople = peopleRepository.getPeople(page = nextPage, count = PAGE_SIZE)
+
+                _uiState.update {
+                    it.copy(
+                        isLoadingMore = false,
+                        people = it.people + additionalPeople, // Append new people
+                        currentPage = nextPage,
+                        canLoadMore = additionalPeople.size == PAGE_SIZE // Still more if full page loaded
+                    )
+                }
+            } catch (e: Exception) {
+                // Handle error for loading more, maybe show a toast or a small error item in the list
+                _uiState.update { it.copy(isLoadingMore = false, errorMessage = "Failed to load more: ${e.message}") }
             }
         }
     }
