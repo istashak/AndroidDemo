@@ -1,10 +1,8 @@
 package com.voloaccendo.androiddemo.data.repository.settings
 
-import android.content.Context
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.PreferenceDataStoreFactory
 import androidx.datastore.preferences.core.Preferences
-import androidx.datastore.preferences.preferencesDataStoreFile
 import com.voloaccendo.androiddemo.data.models.ThemeLighting
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -16,13 +14,6 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.Mock
-import org.mockito.kotlin.doReturn // Use doReturn for mocking extension properties
-import org.mockito.junit.MockitoJUnitRunner
-import org.mockito.kotlin.mock
-import org.mockito.kotlin.whenever
-import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnit
 import org.mockito.junit.MockitoRule
 import org.mockito.quality.Strictness
@@ -32,13 +23,8 @@ import java.io.File
 // @RunWith(MockitoJUnitRunner::class) // Or use the rule
 class DataStoreSettingsRepositoryTest {
 
-    // No need to mock Context for *this specific test* anymore if DataStore is injected
-    // @Mock
-    // private lateinit var mockContext: Context
-
     @get:Rule // Example using MockitoRule
     val mockitoRule: MockitoRule = MockitoJUnit.rule().strictness(Strictness.WARN)
-
 
     private lateinit var repository: DataStoreSettingsRepository
     private lateinit var testDataStore: DataStore<Preferences>
@@ -48,16 +34,11 @@ class DataStoreSettingsRepositoryTest {
 
     @Before
     fun setUp() {
-        // MockitoAnnotations.openMocks(this) // Still needed if you have other @Mocks
-
         tempFile = File.createTempFile("test_settings_pref", ".preferences_pb")
         testDataStore = PreferenceDataStoreFactory.create(
             scope = testScope,
             produceFile = { tempFile }
         )
-
-        // No need to mock context.dataStore anymore
-        // doReturn(testDataStore).whenever(mockContext).dataStore
 
         // Directly pass the testDataStore
         repository = DataStoreSettingsRepository(testDataStore)

@@ -1,12 +1,12 @@
-package com.voloaccendo.androiddemo.data.repository
+package com.voloaccendo.androiddemo.data.repository.people
 
 import com.voloaccendo.androiddemo.data.models.Person
 import com.voloaccendo.androiddemo.data.network.PeopleApiService
 
 class PeopleRepository(private val peopleApiServce: PeopleApiService) : IPeopleRepository {
     private val personMap = mutableMapOf<String, Person>()
-    override suspend fun getPeople(): List<Person> {
-        val response = peopleApiServce.getPeople(10)
+    override suspend fun getPeople(count: Int, page: Int): List<Person> {
+        val response = peopleApiServce.getPeople(count = count, page = page)
         val people = response.body()?.results
 
         people?.forEach { person ->

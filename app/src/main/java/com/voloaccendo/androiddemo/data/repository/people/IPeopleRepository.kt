@@ -1,8 +1,8 @@
-package com.voloaccendo.androiddemo.data.repository
+package com.voloaccendo.androiddemo.data.repository.people
 
 import com.voloaccendo.androiddemo.data.models.Person
 
 interface IPeopleRepository {
-    suspend fun getPeople(): List<Person>
+    suspend fun getPeople(count: Int, page: Int = 1): List<Person>
     suspend fun getPerson(id: String): Person
 }

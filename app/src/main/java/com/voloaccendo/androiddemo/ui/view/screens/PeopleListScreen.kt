@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.CircularProgressIndicator
@@ -78,6 +79,8 @@ fun PeopleList(modifier: Modifier = Modifier, navController: NavController) {
     val isLoading by peopleViewModel.isLoading.collectAsStateWithLifecycle()
     val errorMessage by peopleViewModel.errorMessage.collectAsStateWithLifecycle()
 
+    val listState = rememberLazyListState() // State for LazyColumn
+
     Box(modifier = modifier.padding(horizontal = dimensions.screenPadding).fillMaxSize()) {
         if (isLoading) {
             CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
@@ -92,7 +95,7 @@ fun PeopleList(modifier: Modifier = Modifier, navController: NavController) {
                 modifier = Modifier.align(Alignment.Center)
             )
         } else {
-            LazyColumn {
+            LazyColumn(state = listState) {
                 items(peopleList) { person ->
                     PersonItem(person = person, navController = navController, onClick = {
                         navController.navigate("personDetails/${person.login.uuid}")
