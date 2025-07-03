@@ -1,6 +1,6 @@
 # Android Demo App
 
-This is a native Android application showcasing the knowledge and use of modern
+This is a native Android application showcasing my knowledge and ability to use modern
 Android architecture and components. The application implements a Model-View-ViewModel (MVVM) pattern within a Clean Architecture structure to adhere to SOLID development principles.
 
 The application's modern components include the utilization of: 
